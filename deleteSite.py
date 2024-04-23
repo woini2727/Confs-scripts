@@ -17,17 +17,16 @@ for x in os.listdir(directory):
         for line in lines:
             if medioPagoLine in line:
                 pagos = re.findall(r'\d+', line)
-                if nuevoMedioPago in pagos:
+                print(pagos)
+                if nuevoMedioPago not in pagos:
                     break
-                pagos.append(nuevoMedioPago)
+                pagos.remove(json.dumps(nuevoMedioPago))
                 pagosListToStr = "".join([elem for elem in json.dumps(pagos)])
                 lines[lineCounter] = '\t' * 2 + medioPagoLine + pagosListToStr + ',' + '\n'
-            if protocolLine in line:
+            if protocolLine not in line:
                 protocolos = re.findall(r'\d+', line)
-                if nuevoProtocolo in pagos:
-                    break
-                protocolos.append(nuevoProtocolo)
                 listToStr = ' '.join([str(elem) for elem in protocolos])
+                protocolos.remove(json.dumps(nuevoProtocolo))
                 protocoloListToStr = "".join([elem for elem in json.dumps(protocolos)])
                 lines[lineCounter] = '\t' * 2 + medioPagoLine + protocoloListToStr + ',' + '\n'
             lineCounter += 1
