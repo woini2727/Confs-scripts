@@ -49,7 +49,6 @@ for x in os.listdir(directory):
             lineCounter += 1
             siteNumber = lineReplacer(line)
             if siteNumber in siteList:
-                print("se encontro el sitio: " + siteNumber)
                 findSite = True
                 continue
 
