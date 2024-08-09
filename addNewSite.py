@@ -10,7 +10,7 @@ def siteFileToList(siteFile):
     lines = file.readlines()
     siteList = []
     for line in lines:
-        site = line.strip().rstrip(',')
+        site = line.strip()
         if site:  
             siteList.append(site)
     return siteList
@@ -26,6 +26,7 @@ protocolLine = 'idsprotocolos =>'
 siteline = ' =>' 
 siteList = siteFileToList(listaSiteDirectory)
 print("lista de sitios: " + str(siteList))
+
 findSite = False
 changeMP= False
 for x in os.listdir(directory):
@@ -34,10 +35,11 @@ for x in os.listdir(directory):
         lines = file.readlines()
         lineCounter = 0
         for line in lines:
+            #siteIsInLine = any(site in line for site in siteList)
             for site in siteList:
                 siteL = '"' + site + '"' + siteline
                 if siteL in line:
-                    print("se encontro el sitio: " + siteL)
+                    print("se encontro el sitio: " + site)
                     findSite = True
                     continue
                 if medioPagoLine in line and findSite == True:
