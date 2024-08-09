@@ -51,7 +51,6 @@ for x in os.listdir(directory):
             siteNumber = lineReplacer(line)
             if siteNumber in siteList:
                 findSite = True
-                
                 continue
 
             if medioPagoLine in line and findSite:
