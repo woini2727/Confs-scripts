@@ -51,7 +51,7 @@ for x in os.listdir(directory):
             siteNumber = lineReplacer(line)
             if siteNumber in siteList:
                 findSite = True
-                changeFile = True
+                
                 continue
 
             if medioPagoLine in line and findSite:
@@ -62,6 +62,7 @@ for x in os.listdir(directory):
                 pagos.append(nuevoMedioPago)
                 pagosListToStr = "".join([elem for elem in json.dumps(pagos)])
                 lines[lineCounter] = '\t' * 2 + medioPagoLine + pagosListToStr + ',' + '\n'
+                changeFile = True
                 changeMP = True
                 continue
 
