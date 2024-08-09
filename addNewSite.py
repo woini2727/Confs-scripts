@@ -25,6 +25,7 @@ def lineReplacer(lineToReplace):
     newLine = newLine.replace('\n', '')
     return newLine
 
+
 directory = sys.argv[1]
 nuevoMedioPago = sys.argv[2]
 nuevoProtocolo = sys.argv[3]
@@ -45,12 +46,12 @@ for x in os.listdir(directory):
         lines = file.readlines()
         lineCounter = 0
         for line in lines:
-            if findSite:
-                siteNumber = lineReplacer(line)
-                if siteNumber in siteList:
-                    print("se encontro el sitio: " + siteNumber)
-                    findSite = True
-                    continue
+            lineCounter += 1
+            siteNumber = lineReplacer(line)
+            if siteNumber in siteList:
+                print("se encontro el sitio: " + siteNumber)
+                findSite = True
+                continue
 
             if medioPagoLine in line and findSite:
                 pagos = re.findall(r'\d+', line)
@@ -71,6 +72,6 @@ for x in os.listdir(directory):
                 lines[lineCounter] = '\t' * 2 + protocolLine + protocoloListToStr + ',' + '\n'
                 changeMP = False
                 findSite = False
-        lineCounter += 1
         newfile = open(directory + '/' + x, 'w', encoding="utf8")
+        print(lines)
         newfile.writelines(lines)
