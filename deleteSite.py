@@ -40,13 +40,13 @@ print("lista de sitios: " + str(siteList))
 
 findSite = False
 changeMP = False
+index = 0
 for x in os.listdir(directory):
     changeFile = False
     if x.endswith(".conf"):
         file = open(directory + '/' + x, 'r', encoding="utf8")
         lines = file.readlines()
         lineCounter = -1
-        index = 0
         for line in lines:
             lineCounter += 1
             siteNumber = lineReplacer(line)
@@ -70,6 +70,7 @@ for x in os.listdir(directory):
             if protocolLine in line and changeMP:
                 protocolos = re.findall(r'\d+', line)
                 protocolos.pop(index)
+                index = 0
                 listToStr = ' '.join([str(elem) for elem in protocolos])
                 protocoloListToStr = "".join([elem for elem in json.dumps(protocolos)])
                 lines[lineCounter] = '\t' * 2 + protocolLine + protocoloListToStr + ',' + '\n'
