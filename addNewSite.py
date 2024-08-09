@@ -44,7 +44,7 @@ for x in os.listdir(directory):
     if x.endswith(".conf"):
         file = open(directory + '/' + x, 'r', encoding="utf8")
         lines = file.readlines()
-        lineCounter = 0
+        lineCounter = -1
         for line in lines:
             lineCounter += 1
             siteNumber = lineReplacer(line)
@@ -73,5 +73,4 @@ for x in os.listdir(directory):
                 changeMP = False
                 findSite = False
         newfile = open(directory + '/' + x, 'w', encoding="utf8")
-        print(lines)
         newfile.writelines(lines)
