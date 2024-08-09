@@ -41,6 +41,7 @@ print("lista de sitios: " + str(siteList))
 findSite = False
 changeMP = False
 for x in os.listdir(directory):
+    changeFile = False
     if x.endswith(".conf"):
         file = open(directory + '/' + x, 'r', encoding="utf8")
         lines = file.readlines()
@@ -50,6 +51,7 @@ for x in os.listdir(directory):
             siteNumber = lineReplacer(line)
             if siteNumber in siteList:
                 findSite = True
+                changeFile = True
                 continue
 
             if medioPagoLine in line and findSite:
@@ -71,5 +73,6 @@ for x in os.listdir(directory):
                 lines[lineCounter] = '\t' * 2 + protocolLine + protocoloListToStr + ',' + '\n'
                 changeMP = False
                 findSite = False
-        newfile = open(directory + '/' + x, 'w', encoding="utf8")
-        newfile.writelines(lines)
+        if changeFile:
+            newfile = open(directory + '/' + x, 'w', encoding="utf8")
+            newfile.writelines(lines)
