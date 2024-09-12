@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import re
 import json
@@ -19,7 +21,7 @@ def update_existing_ftp2(new_ftp2_config, site_content):
     updated_site_content = re.sub(
         r'(sftp2\s*=>\s*)\d+,',
         f'sftp2 => {new_ftp2_config["sftp2"]},',
-        site_content
+        updated_site_content
     )
     updated_site_content = re.sub(
         r'(hostftp2\s*=>\s*)\'[^\']+\',',
