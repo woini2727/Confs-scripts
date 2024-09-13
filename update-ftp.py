@@ -70,13 +70,13 @@ def add_ftp2(new_ftp2_config, site_content):
     )
 
     # La f al inicio es para interpolar la REGEX con la variable `ftp2_config_str`
-    replacement = f',\n{ftp2_config_str}}}'
+    replacement = f',\n{ftp2_config_str}'+'}\n'
 
     # Agrega: una coma, el salto de linea, la config ftp2 y por ultimo, la llave de cierre
     # Además, si después de la llave de cierre tenía una coma, entonces agrego la coma al final.
     # Es necesario evaluar esto porque, el último objeto de la lista de sites, no lleva la coma al final
     if re.search(r'(\s*},)$', site_content):
-        replacement = f',\n{ftp2_config_str}}},'
+        replacement = f',\n{ftp2_config_str}'+'},'
 
     # Busca la ultima llave `}` para insertar la nueva configuración FTP2 antes del cierre de la sección del site
     # Es necesario agregar la llave al final xq `re.sub()` reemplaza lo que encontró (la llave) con lo que le paso.
@@ -98,7 +98,7 @@ def update_ftp2_config(directory, site_ids, new_ftp2_config):
     """
 
     # Variable en la que voy escribiendo la respuesta. Es un JSON.
-    updated_sites = {}
+    updated_sites = []
 
     for root, _, files in os.walk(directory):
         for file in files:
@@ -108,6 +108,7 @@ def update_ftp2_config(directory, site_ids, new_ftp2_config):
                 with open(file_path, 'r') as f:
                     content = f.read()
 
+                
                 for site_id in site_ids:
                     # Expresión regular para encontrar la sección del site en el archivo .conf
                     # Esta expresión regular fallaba cuando hay un corchete en un lugar inesperado, por ej passftp
@@ -115,14 +116,10 @@ def update_ftp2_config(directory, site_ids, new_ftp2_config):
                     # El flag re.DOTALL hace el que el punto "." matchee también el caracter de newline
                     site_pattern = re.compile(rf'("{site_id}"\s*=>\s*{{.*?}}[,\n|\s*?\n])', re.DOTALL)
                     match = site_pattern.search(content)
-
+                    
                     if match:
-                        # Si está el site que estoy buscando, pongo en site_content todo lo que matcheó la REGEX (key + objeto site)
                         site_content = match.group(1)
-                        print(site_content)
-                        print("ftp2 in site content?: " + str('ftp2' in site_content))
 
-                        # Si la configuración FTP2 ya existe, la actualizo. Sino la agrego al final.
                         if 'ftp2' in site_content:
                             updated_site_content = update_existing_ftp2(new_ftp2_config, site_content)
                         else:
@@ -131,18 +128,14 @@ def update_ftp2_config(directory, site_ids, new_ftp2_config):
                         # Reemplazo en el string que contiene todo el archivo, SOLO el site que acabo de editar
                         content = content.replace(site_content, updated_site_content)
 
-                        # Guardar los cambios en el archivo
                         with open(file_path, 'w') as f:
                             f.write(content)
 
                         if site_id not in updated_sites:
-                            updated_sites[site_id] = []
-                        updated_sites[site_id].append(file_path)
-
-                # Cuando terminé de recorrer y modificar el archivo actual, lo cierro.
+                            updated_sites.append(site_id)
+                        
                 f.close()
 
-    # Para finalizar retorno todos los sites actualizados
     return updated_sites
 
 
@@ -173,8 +166,6 @@ if __name__ == "__main__":
         "remotefileftp2": args.remotefileftp2
     }
 
-    # Ejecuto la funcion principal
     updated_sites = update_ftp2_config(args.directory, site_ids, new_ftp2_config)
 
-    # Convertir el resultado a JSON y imprimirlo para que pueda ser capturado en Kotlin
-    print(json.dumps(updated_sites))
+    print(updated_sites)
