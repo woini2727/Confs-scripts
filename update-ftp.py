@@ -53,7 +53,7 @@ def update_existing_ftp2(new_ftp2_config, site_content):
 
 
 
-def add_ftp2(new_ftp2_config, site_content):
+def add_ftp2(new_ftp2_config, site_content, site_id):
     """
     Recibe un objeto site sin los campos de FTP2 y le concatena al final del objeto la configuración recibida por parámetro.
     
@@ -66,7 +66,7 @@ def add_ftp2(new_ftp2_config, site_content):
         f'\t\thostftp2 => \'{new_ftp2_config["hostftp2"]}\',\n'
         f'\t\tuserftp2 => \'{new_ftp2_config["userftp2"]}\',\n'
         f'\t\tpassftp2 => \'{new_ftp2_config["passftp2"]}\',\n'
-        f'\t\tremotefileftp2 => \'{new_ftp2_config["remotefileftp2"]}\'\n'
+        f'\t\tremotefileftp2 => \'lote{site_id}_%dd%mm%yy.%mediopago.txt\'\n'
     )
 
     # La f al inicio es para interpolar la REGEX con la variable `ftp2_config_str`
@@ -123,7 +123,7 @@ def update_ftp2_config(directory, site_ids, new_ftp2_config):
                         if 'ftp2' in site_content:
                             updated_site_content = update_existing_ftp2(new_ftp2_config, site_content)
                         else:
-                            updated_site_content = add_ftp2(new_ftp2_config, site_content)
+                            updated_site_content = add_ftp2(new_ftp2_config, site_content, site_id)
 
                         # Reemplazo en el string que contiene todo el archivo, SOLO el site que acabo de editar
                         content = content.replace(site_content, updated_site_content)
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     parser.add_argument("hostftp2", help="Host FTP2")
     parser.add_argument("userftp2", help="Usuario FTP2")
     parser.add_argument("passftp2", help="Contraseña FTP2")
-    parser.add_argument("remotefileftp2", help="Archivo remoto FTP2. Es un template")
+    #parser.add_argument("remotefileftp2", help="Archivo remoto FTP2. Es un template")
 
     args = parser.parse_args()
 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
         "hostftp2": args.hostftp2,
         "userftp2": args.userftp2,
         "passftp2": args.passftp2,
-        "remotefileftp2": args.remotefileftp2
+        #"remotefileftp2": args.remotefileftp2
     }
 
     updated_sites = update_ftp2_config(args.directory, site_ids, new_ftp2_config)
